@@ -16,14 +16,19 @@ public class Player : MonoBehaviour {
 
     void Start()
     {
+        GetComponent<Rigidbody2D>().centerOfMass = GetComponent<CircleCollider2D>().offset;
+        Physics2D.gravity = new Vector2(0, Physics2D.gravity.y * GetComponent<Rigidbody2D>().mass);
+        transform.position = new Vector3(CameraScript.leftBottom.x + 1.28f*5, CameraScript.leftBottom.y + 10, 1);
+        maxSpeed *= GetComponent<Rigidbody2D>().mass;
+        jumpForce *= GetComponent<Rigidbody2D>().mass;
+        //transform.localScale = new Vector3(Constants.instance.Scale, Constants.instance.Scale, 1);
         GameManager.instance.player = gameObject;
-        GameManager.instance.sceneObjects.Add(this);
     }
 
     // Use this for initialization
     void FixedUpdate()
     {
-        grounded = GetComponent<Rigidbody2D>().IsTouchingLayers(whatIsGround);
+        grounded = GetComponent<CircleCollider2D>().IsTouchingLayers(whatIsGround);
         move = Input.GetAxis("Horizontal");
     }
 
@@ -37,7 +42,9 @@ public class Player : MonoBehaviour {
     {
         switch (other.gameObject.tag)
         {
-            case "Coin":
+            case "BronseCoin":
+            case "SilverCoin":
+            case "GoldCoin":
                 PickCoin(other.gameObject);
                 break;
             default:
@@ -49,7 +56,7 @@ public class Player : MonoBehaviour {
     void PickCoin(GameObject coin)
     {
         SoundManager.instance.PlayEffect(Constants.instance.pickCoinSound);
-        switch(coin.name)
+        switch(coin.tag)
         {
             case "BronseCoin":
                 print("bronse coin!");
@@ -63,9 +70,6 @@ public class Player : MonoBehaviour {
                 print("gold coin!");
                 coins += Constants.instance.goldCoinPoints;
                 break;
-            default:
-                return;
-                break;
         }
         coin.SetActive(false);
     }
@@ -77,7 +81,7 @@ public class Player : MonoBehaviour {
         {
             GetComponent<Rigidbody2D>().AddForce(new Vector2(0f, jumpForce));
         }
-        GetComponent<Rigidbody2D>().velocity = new Vector2(move * maxSpeed, GetComponent<Rigidbody2D>().velocity.y);
+        GetComponent<Rigidbody2D>().velocity = new Vector2(move * maxSpeed, GetComponent<Rigidbody2D>().velocity.y); 
         if (move > 0 && !facingRight)
             Flip();
         else if (move < 0 && facingRight)
@@ -115,6 +119,7 @@ public class Player : MonoBehaviour {
 
     void Flip()
     {
+        GetComponent<Rigidbody2D>().centerOfMass *= -1;
         facingRight = !facingRight;
         Vector3 theScale = transform.localScale;
         theScale.x *= -1;

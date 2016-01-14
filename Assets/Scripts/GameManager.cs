@@ -29,14 +29,13 @@ public class GameManager : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-        if (!scaleDone)
+      /*  if (!scaleDone)
         {
-            new LevelGenerator().Generate();
             foreach (var one in sceneObjects)
             {
                 one.transform.localScale = new Vector3(Constants.instance.Scale, Constants.instance.Scale, 1);
             }
             scaleDone = true;
-        }
+        }*/
     }
 }

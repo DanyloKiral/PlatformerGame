@@ -14,7 +14,7 @@ public class Constants : MonoBehaviour {
 
     void Start()
     {
-        Scale = Screen.height / 1.5f;
+      //  Scale = Screen.height / 1.5f;
     }
 
     void Awake()
@@ -25,5 +25,7 @@ public class Constants : MonoBehaviour {
             Destroy(gameObject);
 
         DontDestroyOnLoad(gameObject);
+        Scale = Screen.height / 150f;
+        Scale = 1;
     }
 }
